@@ -1,0 +1,161 @@
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 20px;">
+    <!-- Botón para crear estudiante -->
+    <button 
+        pButton 
+        pRipple 
+        type="button" 
+        icon="pi pi-plus" 
+        class="p-button-rounded p-button-success"
+        (click)="abrirDialogoCrear()" 
+        style="margin-bottom: 20px;">
+        Crear Estudiante
+    </button>
+
+    <!-- Tabla para mostrar estudiantes -->
+    <p-table [value]="estudiantes" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>ID</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-estudiante>
+            <tr>
+                <td>{{ estudiante.id }}</td>
+                <td>{{ estudiante.codigo }}</td>
+                <td>{{ estudiante.persona.nombre }}</td>
+                <td>{{ estudiante.persona.apellido }}</td>
+                <td>{{ estudiante.persona.dni }}</td>
+                <td>{{ estudiante.persona.correo }}</td>
+                <td>{{ estudiante.persona.telefono }}</td>
+                <td>{{ estudiante.estado }}</td>
+                <td>
+                    <button 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        icon="pi pi-pencil" 
+                        class="p-button-rounded"
+                        (click)="abrirDialogoEditar(estudiante)">
+                    </button>
+                    <button 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        icon="pi pi-trash" 
+                        class="p-button-rounded p-button-danger"
+                        (click)="showDialogDelete(estudiante.id)">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Diálogo para crear o editar estudiante -->
+<p-dialog header="{{ titulo }}" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <div class="p-fluid">
+        <!-- Campo para código -->
+        <div class="p-field">
+            <label for="codigo">Código</label>
+            <input 
+                id="codigo" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="estudiante.codigo" 
+                required 
+                placeholder="Ingrese el código" />
+        </div>
+        <!-- Campo para nombre -->
+        <div class="p-field">
+            <label for="nombre">Nombre</label>
+            <input 
+                id="nombre" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.nombre" 
+                required 
+                placeholder="Ingrese el nombre" />
+        </div>
+        <!-- Campo para apellido -->
+        <div class="p-field">
+            <label for="apellido">Apellido</label>
+            <input 
+                id="apellido" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.apellido" 
+                required 
+                placeholder="Ingrese el apellido" />
+        </div>
+        <!-- Campo para DNI -->
+        <div class="p-field">
+            <label for="dni">DNI</label>
+            <input 
+                id="dni" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.dni" 
+                required 
+                placeholder="Ingrese el DNI" />
+        </div>
+        <!-- Campo para correo -->
+        <div class="p-field">
+            <label for="correo">Correo</label>
+            <input 
+                id="correo" 
+                type="email" 
+                pInputText 
+                [(ngModel)]="persona.correo" 
+                required 
+                placeholder="Ingrese el correo" />
+        </div>
+        <!-- Campo para teléfono -->
+        <div class="p-field">
+            <label for="telefono">Teléfono</label>
+            <input 
+                id="telefono" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.telefono" 
+                required 
+                placeholder="Ingrese el teléfono" />
+        </div>
+        <!-- Campo para estado (solo visible al editar) -->
+        <div class="p-field" *ngIf="modoEdicion">
+            <label for="estado">Estado</label>
+            <input 
+                id="estado" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="estudiante.estado" 
+                placeholder="Ingrese el estado" />
+        </div>
+    </div>
+    <p-footer>
+        <button 
+            pButton 
+            icon="pi pi-times" 
+            label="Cancelar" 
+            class="p-button-text" 
+            (click)="cerrarDialogo()">
+        </button>
+        <button 
+            pButton 
+            icon="pi pi-check" 
+            label="{{ modoEdicion ? 'Actualizar' : 'Guardar' }}" 
+            (click)="guardar()">
+        </button>
+    </p-footer>
+</p-dialog>
+
+<p-toast></p-toast> <!-- Toast para mostrar mensajes de éxito o error -->
+<p-confirmDialog></p-confirmDialog> <!-- ConfirmDialog para eliminar estudiante -->

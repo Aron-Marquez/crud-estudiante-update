@@ -1,0 +1,148 @@
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 20px;">
+    <!-- Botón para crear persona -->
+    <button 
+        pButton 
+        pRipple 
+        type="button" 
+        icon="pi pi-plus" 
+        class="p-button-rounded p-button-success"
+        (click)="abrirDialogoCrear()" 
+        style="margin-bottom: 20px;">
+        Crear Persona
+    </button>
+
+    <!-- Tabla para mostrar personas -->
+    <p-table [value]="personas" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-persona>
+            <tr>
+                <td>{{ persona.id }}</td>
+                <td>{{ persona.nombre }}</td>
+                <td>{{ persona.apellido }}</td>
+                <td>{{ persona.dni }}</td>
+                <td>{{ persona.correo }}</td>
+                <td>{{ persona.telefono }}</td>
+                <td>{{ persona.estado }}</td>
+                <td>
+                    <button 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        icon="pi pi-pencil" 
+                        class="p-button-rounded"
+                        (click)="abrirDialogoEditar(persona)">
+                    </button>
+                    <button 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        icon="pi pi-trash" 
+                        class="p-button-rounded p-button-danger"
+                        (click)="eliminarPersona(persona.id)">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Diálogo para crear o editar persona -->
+<p-dialog header="{{ titulo }}" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <div class="p-fluid">
+        <!-- Campo para nombre -->
+        <div class="p-field">
+            <label for="nombre">Nombre</label>
+            <input 
+                id="nombre" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.nombre" 
+                required 
+                placeholder="Ingrese el nombre" />
+        </div>
+        <!-- Campo para apellido -->
+        <div class="p-field">
+            <label for="apellido">Apellido</label>
+            <input 
+                id="apellido" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.apellido" 
+                required 
+                placeholder="Ingrese el apellido" />
+        </div>
+        <!-- Campo para DNI -->
+        <div class="p-field">
+            <label for="dni">DNI</label>
+            <input 
+                id="dni" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.dni" 
+                required 
+                placeholder="Ingrese el DNI" />
+        </div>
+        <!-- Campo para correo -->
+        <div class="p-field">
+            <label for="correo">Correo</label>
+            <input 
+                id="correo" 
+                type="email" 
+                pInputText 
+                [(ngModel)]="persona.correo" 
+                required 
+                placeholder="Ingrese el correo" />
+        </div>
+        <!-- Campo para teléfono -->
+        <div class="p-field">
+            <label for="telefono">Teléfono</label>
+            <input 
+                id="telefono" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.telefono" 
+                required 
+                placeholder="Ingrese el teléfono" />
+        </div>
+        <!-- Campo para estado (solo visible al editar) -->
+        <div class="p-field" *ngIf="modoEdicion">
+            <label for="estado">Estado</label>
+            <input 
+                id="estado" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="persona.estado" 
+                placeholder="Ingrese el estado" />
+        </div>
+    </div>
+    <p-footer>
+        <button 
+            pButton 
+            icon="pi pi-times" 
+            label="Cancelar" 
+            class="p-button-text" 
+            (click)="cerrarDialogo()">
+        </button>
+        <button 
+            pButton 
+            icon="pi pi-check" 
+            label="{{ modoEdicion ? 'Actualizar' : 'Guardar' }}" 
+            (click)="guardar()">
+        </button>
+    </p-footer>
+</p-dialog>
+
+<p-toast></p-toast> <!-- Toast para mostrar mensajes de éxito o error -->
+<p-confirmDialog></p-confirmDialog> <!-- ConfirmDialog para eliminar persona -->
